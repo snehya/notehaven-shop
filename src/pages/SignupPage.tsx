@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { BackButton } from '@/components/common/BackButton';
 
 export const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -65,6 +66,12 @@ export const SignupPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-card flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md space-y-8">
+        {/* Back Button */}
+        <div className="flex justify-start">
+          <BackButton fallbackUrl="/" className="mb-4">
+            Back to Home
+          </BackButton>
+        </div>
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <div className="h-12 w-12 bg-gradient-primary rounded-lg flex items-center justify-center">

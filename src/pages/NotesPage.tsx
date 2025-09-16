@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { NoteCard, Note } from '@/components/common/NoteCard';
+import { BackButton } from '@/components/common/BackButton';
 import { 
   Search, 
   Filter, 
@@ -251,6 +252,11 @@ export const NotesPage: React.FC = () => {
       <section className="bg-gradient-card border-b">
         <div className="container py-8">
           <div className="max-w-4xl">
+            <div className="flex items-center justify-between mb-6">
+              <BackButton fallbackUrl="/" variant="outline">
+                Back to Home
+              </BackButton>
+            </div>
             <h1 className="text-4xl font-bold text-primary mb-4">
               Discover Quality Study Notes
             </h1>

@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { BookOpen, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { BackButton } from '@/components/common/BackButton';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -52,6 +53,12 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-card flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md space-y-8">
+        {/* Back Button */}
+        <div className="flex justify-start">
+          <BackButton fallbackUrl="/" className="mb-4">
+            Back to Home
+          </BackButton>
+        </div>
         {/* Logo & Header */}
         <div className="text-center">
           <div className="flex justify-center mb-4">
