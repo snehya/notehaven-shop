@@ -1,0 +1,348 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Academic Marketplace Design System - Professional, trustworthy, modern */
+
+@layer base {
+  :root {
+    /* Core Brand Colors */
+    --background: 0 0% 99%;
+    --foreground: 222 84% 4.9%;
+    
+    /* Academic Brand Palette */
+    --primary: 222 47% 11%;          /* Deep Navy - Trust & Authority */
+    --primary-foreground: 0 0% 98%;
+    --primary-light: 222 35% 25%;    /* Lighter navy for hover states */
+    
+    --secondary: 36 77% 49%;         /* Warm Amber - Energy & Success */
+    --secondary-foreground: 222 84% 4.9%;
+    --secondary-light: 36 77% 65%;
+  }
+
+  /* Smooth scrolling and performance optimizations */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4rem;
+  }
+
+  /* Performance optimizations for parallax */
+  body {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Optimize animations for performance */
+  * {
+    transform-style: preserve-3d;
+  }
+
+  /* Will-change optimization for parallax elements */
+  .parallax-element {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+:root {
+  /* Academic Color Palette */
+  --accent: 142 69% 45%;           /* Academic Green - Growth & Money */
+    --accent-foreground: 0 0% 98%;
+    --accent-light: 142 69% 58%;
+    
+    /* Neutral Palette */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 222 84% 4.9%;
+    
+    /* Semantic Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 69% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 36 77% 49%;
+    --warning-foreground: 222 84% 4.9%;
+    
+    /* Card & Surface Colors */
+    --card: 0 0% 100%;
+    --card-foreground: 222 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 84% 4.9%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 35% 25%));
+    --gradient-secondary: linear-gradient(135deg, hsl(36 77% 49%), hsl(36 77% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(222 35% 25%) 50%, hsl(36 77% 49%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    
+    /* Shadows */
+    --shadow-card: 0 4px 6px -1px hsl(222 47% 11% / 0.1), 0 2px 4px -1px hsl(222 47% 11% / 0.06);
+    --shadow-elevated: 0 10px 25px -3px hsl(222 47% 11% / 0.1), 0 4px 6px -2px hsl(222 47% 11% / 0.05);
+    --shadow-focus: 0 0 0 3px hsl(222 47% 11% / 0.1);
+    
+    /* Border Radius */
+    --radius: 0.75rem;
+    
+    /* Sidebar Variables */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 222 47% 11%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 222 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 36 77% 49%;
+    --secondary-foreground: 222 84% 4.9%;
+    --muted: 222 35% 25%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 142 69% 45%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 222 35% 25%;
+    --input: 222 35% 25%;
+    --ring: 212 26% 83%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+}
+
+@layer utilities {
+  /* Custom gradient backgrounds */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+
+  /* Custom shadows */
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .shadow-focus {
+    box-shadow: var(--shadow-focus);
+  }
+
+  /* Text gradients */
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-secondary {
+    background: var(--gradient-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* PDF Preview Styles */
+.pdf-preview {
+  @apply border border-border rounded-lg overflow-hidden shadow-card;
+}
+
+.pdf-preview canvas {
+  @apply w-full h-auto;
+}
+
+/* Academic Note Card Hover Effects */
+.note-card {
+  @apply transition-all duration-300 hover:shadow-elevated hover:-translate-y-1;
+}
+
+.note-card:hover .note-preview {
+  @apply scale-105;
+}
+
+/* Price Tag Styling */
+.price-tag {
+  @apply bg-gradient-secondary text-secondary-foreground font-bold px-3 py-1 rounded-full text-sm shadow-card;
+}
+
+/* Status Badges */
+.status-pending {
+  @apply bg-warning/10 text-warning border border-warning/20;
+}
+
+.status-approved {
+  @apply bg-success/10 text-success border border-success/20;
+}
+
+.status-rejected {
+  @apply bg-destructive/10 text-destructive border border-destructive/20;
+}
+
+/* Transparent white button for better text visibility */
+.btn-white-transparent {
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-white-transparent:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Voice search enhancements */
+.voice-search-active {
+  background: linear-gradient(45deg, #fef2f2, #ffffff);
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.voice-search-pulse {
+  animation: voice-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes voice-pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
