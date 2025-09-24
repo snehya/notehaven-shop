@@ -7,6 +7,7 @@
 import React, { useState, useCallback, useMemo, memo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import type { User as UserType } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -30,7 +31,7 @@ import {
   MicOff
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
@@ -48,7 +49,7 @@ interface SearchFormProps {
  * User dropdown menu props interface
  */
 interface UserMenuProps {
-  user: any; // TODO: Replace with proper User type from context
+  user: UserType | null;
   onLogout: () => void;
 }
 
@@ -188,8 +189,8 @@ const SearchForm: React.FC<SearchFormProps> = memo(({
             <div className="bg-red-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-2 shadow-lg">
               <div className="flex space-x-1">
                 <div className="w-1 h-1 bg-white rounded-full animate-bounce"></div>
-                <div className="w-1 h-1 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-1 h-1 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-1 h-1 bg-white rounded-full animate-bounce-delay-1"></div>
+                <div className="w-1 h-1 bg-white rounded-full animate-bounce-delay-2"></div>
               </div>
               <span>Listening... Speak now</span>
             </div>

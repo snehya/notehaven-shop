@@ -12,9 +12,11 @@ import {
   Clock, 
   FileText,
   GraduationCap,
-  AlertTriangle
+  AlertTriangle,
+  Plus,
+  Minus
 } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { formatPrice, formatDate, truncateText, cn } from '@/lib/utils';
@@ -103,11 +105,11 @@ const SIZE_CONFIGS = {
     footer: 'p-3 pt-0',
   },
   default: {
-    card: 'h-[400px]',
+    card: 'min-h-[400px] flex flex-col',
     image: 'aspect-[4/3]',
     title: 'text-sm',
-    content: 'p-4',
-    footer: 'p-4 pt-0',
+    content: 'p-4 flex-1',
+    footer: 'p-4 pt-0 mt-auto',
   },
   large: {
     card: 'h-[480px]',
@@ -184,39 +186,29 @@ export const NoteCard: React.FC<NoteCardProps> = memo(({
   onClick,
   isInCart: isInCartProp,
 }) => {
-  const { addItem, hasItem } = useCart();
+  // All hooks must be called before any conditional returns
+  const { addItem, hasItem, getItem, updateItemQuantity, removeItem } = useCart();
   const { isAuthenticated } = useAuth();
 
-  // Validate note data
-  if (!validateNote(note)) {
-    console.warn('Invalid note data provided to NoteCard:', note);
-    return (
-      <Card className={cn('p-4 border-destructive', className)}>
-        <div className="flex items-center space-x-2 text-destructive">
-          <AlertTriangle className="w-4 h-4" />
-          <span className="text-sm">Invalid note data</span>
-        </div>
-      </Card>
-    );
-  }
-
   const config = SIZE_CONFIGS[size];
-  const isInCart = isInCartProp ?? hasItem(note.id);
+  const isInCart = isInCartProp ?? (note?.id ? hasItem(note.id) : false);
+  const currentItem = note?.id ? getItem(note.id) : undefined;
+  const quantity = currentItem?.quantity || 1;
 
   /**
    * Memoized status color calculation
    */
   const statusColor = useMemo(() => 
-    STATUS_COLORS[note.status] || STATUS_COLORS[NOTE_STATUS.PENDING],
-    [note.status]
+    note?.status ? STATUS_COLORS[note.status] || STATUS_COLORS[NOTE_STATUS.PENDING] : STATUS_COLORS[NOTE_STATUS.PENDING],
+    [note?.status]
   );
 
   /**
    * Memoized formatted status text
    */
   const formattedStatus = useMemo(() => 
-    note.status.charAt(0).toUpperCase() + note.status.slice(1),
-    [note.status]
+    note?.status ? note.status.charAt(0).toUpperCase() + note.status.slice(1) : 'Pending',
+    [note?.status]
   );
 
   /**
@@ -236,15 +228,7 @@ export const NoteCard: React.FC<NoteCardProps> = memo(({
     e.preventDefault();
     e.stopPropagation();
     
-    if (!isAuthenticated) {
-      toast({
-        title: "Authentication Required",
-        description: TOAST_MESSAGES.ERROR.UNAUTHORIZED,
-        variant: "destructive",
-      });
-      return;
-    }
-
+    // Allow guest users to add to cart, require auth only at checkout
     if (isInCart) {
       toast({
         title: "Already in Cart",
@@ -276,7 +260,50 @@ export const NoteCard: React.FC<NoteCardProps> = memo(({
         variant: "destructive",
       });
     }
-  }, [isAuthenticated, isInCart, addItem, note]);
+  }, [isInCart, addItem, note]);
+
+  /**
+   * Handle quantity increase
+   */
+  const handleIncreaseQuantity = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const currentItem = getItem(note.id);
+    if (currentItem) {
+      updateItemQuantity(note.id, (currentItem.quantity || 1) + 1);
+      toast({
+        title: "Quantity Updated",
+        description: `Increased quantity to ${(currentItem.quantity || 1) + 1}`,
+      });
+    }
+  }, [getItem, updateItemQuantity, note.id]);
+
+  /**
+   * Handle quantity decrease
+   */
+  const handleDecreaseQuantity = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const currentItem = getItem(note.id);
+    if (currentItem) {
+      const newQuantity = (currentItem.quantity || 1) - 1;
+      if (newQuantity <= 0) {
+        removeItem(note.id);
+        toast({
+          title: "Removed from Cart",
+          description: `${truncateText(note.title, 30)} has been removed from your cart.`,
+        });
+      } else {
+        updateItemQuantity(note.id, newQuantity);
+        toast({
+          title: "Quantity Updated",
+          description: `Decreased quantity to ${newQuantity}`,
+        });
+      }
+    }
+  }, [getItem, updateItemQuantity, removeItem, note]);
 
   /**
    * Handle card click
@@ -284,6 +311,19 @@ export const NoteCard: React.FC<NoteCardProps> = memo(({
   const handleCardClick = useCallback(() => {
     onClick?.();
   }, [onClick]);
+
+  // Validate note data after all hooks
+  if (!validateNote(note)) {
+    console.warn('Invalid note data provided to NoteCard:', note);
+    return (
+      <Card className={cn('p-4 border-destructive', className)}>
+        <div className="flex items-center space-x-2 text-destructive">
+          <AlertTriangle className="w-4 h-4" />
+          <span className="text-sm">Invalid note data</span>
+        </div>
+      </Card>
+    );
+  }
 
   /**
    * Render loading skeleton
@@ -427,35 +467,58 @@ export const NoteCard: React.FC<NoteCardProps> = memo(({
         </div>
       </CardContent>
 
-      {/* Action Buttons */}
-      {showActions && (
-        <CardFooter className={config.footer}>
-          <div className="flex space-x-2 w-full">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              asChild 
-              className="flex-1"
-            >
-              <Link to={`${ROUTES.NOTES}/${note.id}`}>
-                <Eye className="w-4 h-4 mr-2" />
-                Preview
-              </Link>
-            </Button>
-            
+      {/* Action Buttons - Force Visible */}
+      <CardFooter className={cn(config.footer, "border-t bg-card")}>
+        <div className="flex space-x-2 w-full">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            asChild 
+            className="flex-1"
+          >
+            <Link to={`${ROUTES.NOTES}/${note.id}`}>
+              <Eye className="w-4 h-4 mr-2" />
+              Preview
+            </Link>
+          </Button>
+          
+          {!isInCart ? (
             <Button 
               size="sm" 
               onClick={handleAddToCart}
               className="flex-1"
-              disabled={isInCart}
-              variant={isInCart ? "secondary" : "default"}
             >
               <ShoppingCart className="w-4 h-4 mr-2" />
-              {isInCart ? "In Cart" : "Add to Cart"}
+              Add to Cart
             </Button>
-          </div>
-        </CardFooter>
-      )}
+          ) : (
+            <div className="flex-1 flex items-center justify-between bg-secondary rounded-md px-2 py-1">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleDecreaseQuantity}
+                className="h-6 w-6 p-0 hover:bg-secondary-foreground/10"
+              >
+                <Minus className="w-3 h-3" />
+              </Button>
+              
+              <div className="flex items-center space-x-2 text-sm font-medium">
+                <ShoppingCart className="w-3 h-3" />
+                <span>{quantity}</span>
+              </div>
+              
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleIncreaseQuantity}
+                className="h-6 w-6 p-0 hover:bg-secondary-foreground/10"
+              >
+                <Plus className="w-3 h-3" />
+              </Button>
+            </div>
+          )}
+        </div>
+      </CardFooter>
     </Card>
   );
 });

@@ -17,6 +17,8 @@ export const ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   CART: '/cart',
+  CHECKOUT: '/checkout',
+  ORDERS: '/orders',
   PROFILE: '/profile',
   SPEECH_DEMO: '/speech-demo',
   SELLER_DASHBOARD: '/seller/dashboard',

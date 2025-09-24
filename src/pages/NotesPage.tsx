@@ -451,7 +451,8 @@ export const NotesPage: React.FC = () => {
                   <NoteCard 
                     key={note.id} 
                     note={note} 
-                    size={viewMode === 'list' ? 'compact' : 'default'} 
+                    size={viewMode === 'list' ? 'compact' : 'default'}
+                    showActions={true}
                   />
                 ))}
               </div>

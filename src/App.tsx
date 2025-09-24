@@ -16,6 +16,9 @@ import { LandingPage } from "./pages/LandingPage";
 import { NotesPage } from "./pages/NotesPage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
+import { CartPage } from "./pages/CartPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
+import { OrdersPage } from "./pages/OrdersPage";
 import SpeechRecognitionDemo from "./pages/SpeechRecognitionDemo";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +52,9 @@ const App = () => (
                   <Route path="/notes" element={<NotesPage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/signup" element={<SignupPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/orders" element={<OrdersPage />} />
                   <Route path="/speech-demo" element={<SpeechRecognitionDemo />} />
                   
                   {/* Admin Routes */}

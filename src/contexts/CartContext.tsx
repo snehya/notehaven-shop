@@ -45,7 +45,7 @@ interface CartState {
 /**
  * Cart context type definition with comprehensive cart operations
  */
-interface CartContextType extends CartState, CartStats {
+export interface CartContextType extends CartState, CartStats {
   addItem: (item: Omit<CartItem, 'addedAt'>) => void;
   removeItem: (id: string) => void;
   updateItemQuantity: (id: string, quantity: number) => void;
@@ -143,20 +143,13 @@ const initialState: CartState = {
 /**
  * Cart context instance
  */
-const CartContext = createContext<CartContextType | undefined>(undefined);
+export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 /**
  * Custom hook to access cart context
  * @throws {Error} When used outside of CartProvider
  * @returns Cart context value
  */
-export const useCart = (): CartContextType => {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
-};
 
 /**
  * Cart provider component props
