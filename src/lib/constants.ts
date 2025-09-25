@@ -20,6 +20,7 @@ export const ROUTES = {
   CHECKOUT: '/checkout',
   ORDERS: '/orders',
   PROFILE: '/profile',
+  SELLER_PROFILE: '/seller-profile',
   SPEECH_DEMO: '/speech-demo',
   SELLER_DASHBOARD: '/seller/dashboard',
   SELLER_LISTINGS: '/seller/listings',

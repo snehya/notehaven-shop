@@ -72,6 +72,7 @@ interface AuthContextType extends AuthState {
   logout: () => Promise<void>;
   clearError: () => void;
   refreshUser: () => Promise<void>;
+  updateProfile: (updates: Partial<Pick<User, 'name' | 'avatar'>>) => Promise<void>;
   isAuthenticated: boolean;
   hasRole: (role: UserRole) => boolean;
   hasAnyRole: (roles: UserRole[]) => boolean;
@@ -389,6 +390,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [state.user]);
 
   /**
+   * Update user profile
+   */
+  const updateProfile = useCallback(async (updates: Partial<Pick<User, 'name' | 'avatar'>>): Promise<void> => {
+    if (!state.user) {
+      throw new AuthError(AuthErrorType.INVALID_CREDENTIALS, 'User not authenticated');
+    }
+
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      
+      // In a real app, this would make an API call to update the user profile
+      // For now, we'll just update the local state and localStorage
+      const updatedUser = {
+        ...state.user,
+        ...updates,
+      };
+      
+      saveUserData(updatedUser);
+      dispatch({ type: 'SET_USER', payload: updatedUser });
+    } catch (error) {
+      const authError = new AuthError(
+        AuthErrorType.NETWORK_ERROR,
+        'Failed to update profile',
+        error as Error
+      );
+      dispatch({ type: 'SET_ERROR', payload: authError });
+      throw authError;
+    }
+  }, [state.user]);
+
+  /**
    * Check if user is authenticated
    */
   const isAuthenticated = useMemo(() => !!state.user, [state.user]);
@@ -421,6 +453,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     clearError,
     refreshUser,
+    updateProfile,
     isAuthenticated,
     hasRole,
     hasAnyRole,
@@ -431,6 +464,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     clearError,
     refreshUser,
+    updateProfile,
     isAuthenticated,
     hasRole,
     hasAnyRole,

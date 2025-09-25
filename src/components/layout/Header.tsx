@@ -244,15 +244,16 @@ const UserMenu: React.FC<UserMenuProps> = memo(({ user, onLogout }) => (
       <DropdownMenuSeparator />
       
       <DropdownMenuItem asChild>
-        <Link to={ROUTES.PROFILE}>
+        <Link to={user.role === 'seller' ? ROUTES.SELLER_PROFILE : ROUTES.PROFILE}>
           <User className="mr-2 h-4 w-4" />
           Profile
         </Link>
       </DropdownMenuItem>
 
-      {/* Seller Menu Items */}
-      {(user.role === 'seller' || user.role === 'admin') && (
+      {/* Seller Menu Items - Only for sellers */}
+      {user.role === 'seller' && (
         <>
+          <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link to={ROUTES.SELLER_DASHBOARD}>
               <BarChart3 className="mr-2 h-4 w-4" />

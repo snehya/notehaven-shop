@@ -19,8 +19,15 @@ import { SignupPage } from "./pages/SignupPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import { OrdersPage } from "./pages/OrdersPage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { SellerProfilePage } from "./pages/SellerProfilePage";
 import SpeechRecognitionDemo from "./pages/SpeechRecognitionDemo";
 import NotFound from "./pages/NotFound";
+
+// Seller Pages
+import { SellerDashboard } from "./pages/seller/SellerDashboard";
+import { SellerListings } from "./pages/seller/SellerListings";
+import { UploadNote } from "./pages/seller/UploadNote";
 
 // Admin Pages
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
@@ -55,7 +62,14 @@ const App = () => (
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/orders" element={<OrdersPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/seller-profile" element={<SellerProfilePage />} />
                   <Route path="/speech-demo" element={<SpeechRecognitionDemo />} />
+                  
+                  {/* Seller Routes */}
+                  <Route path="/seller/dashboard" element={<SellerDashboard />} />
+                  <Route path="/seller/listings" element={<SellerListings />} />
+                  <Route path="/seller/listings/new" element={<UploadNote />} />
                   
                   {/* Admin Routes */}
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
